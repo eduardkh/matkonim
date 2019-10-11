@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import Matkon
+from .models import Matkon, Ingredient, Technique, Category, PrepTime, CookTime, Difficulty
 
 class MatkonModelAdmin(admin.ModelAdmin):
-    list_display = ['author', 'title', 'sections', 'updated']
+    list_display = ['author', 'title', 'updated', 'timestamp']
     list_display_links = ['updated']
     list_filter = ['updated', 'timestamp']
 
@@ -11,3 +11,9 @@ class MatkonModelAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Matkon, MatkonModelAdmin)
+admin.site.register(Ingredient)
+admin.site.register(Technique)
+admin.site.register(Category)
+admin.site.register(PrepTime)
+admin.site.register(CookTime)
+admin.site.register(Difficulty)
