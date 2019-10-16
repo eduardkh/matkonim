@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Matkon, Ingredient, Technique, Category, PrepTime, CookTime, Difficulty
+from .models import *
 
 class MatkonModelAdmin(admin.ModelAdmin):
     list_display = ['author', 'title', 'updated', 'timestamp']
@@ -17,3 +17,4 @@ admin.site.register(Category)
 admin.site.register(PrepTime)
 admin.site.register(CookTime)
 admin.site.register(Difficulty)
+admin.site.register(Quantity)

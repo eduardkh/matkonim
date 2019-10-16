@@ -1,43 +1,43 @@
 from django.db import models
 from django.conf import settings
+from datetime import datetime
 
 User = settings.AUTH_USER_MODEL
 
 
 # Technique
 class Technique(models.Model):
-    title = models.CharField(max_length=120)
+    name = models.CharField(max_length=120)
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return self.title
+        return self.name
 
 
 # Category
 class Category(models.Model):
-    title = models.CharField(max_length=120)
+    name = models.CharField(max_length=120)
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return self.title
+        return self.name
 
 
-# Difficulty
+# Difficulty - Choices
 class Difficulty(models.Model):
-    title = models.CharField(max_length=120)
-    description = models.TextField(null=True, blank=True)
+    option = models.CharField(max_length=120)
 
     def __str__(self):
-        return self.title
+        return self.option
 
 
 # Ingredient
 class Ingredient(models.Model):
-    title = models.CharField(max_length=120)
+    name = models.CharField(max_length=120)
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return self.title
+        return self.name
 
 
 # Prep Time
@@ -63,18 +63,33 @@ class Matkon(models.Model):
     title = models.CharField(max_length=120)
     category = models.ManyToManyField(Category)
     techniques = models.ManyToManyField(Technique)
-    difficulty = models.ManyToManyField(Difficulty)
+    difficulty = models.ForeignKey(
+        Difficulty, default=1, on_delete=models.SET_NULL, null=True, blank=True)
     image = models.ImageField(null=True, blank=True, upload_to='uploads/')
     prologue = models.TextField(null=True, blank=True)
-    prep_time = models.ManyToManyField(PrepTime)
-    cook_time = models.ManyToManyField(CookTime)
-    ingredients = models.ManyToManyField(Ingredient)
+    prep_time = models.ForeignKey(
+        PrepTime, default=1, on_delete=models.SET_NULL, null=True, blank=True)
+    cook_time = models.ForeignKey(
+        CookTime, default=1, on_delete=models.SET_NULL, null=True, blank=True)
+    ingredients = models.ManyToManyField(Ingredient, through='Quantity')
     Instructions = models.TextField(null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
     publish_date = models.DateTimeField(
         auto_now=False, auto_now_add=True, null=True)
-    timestamp = models.DateTimeField(auto_now_add=False)
+    timestamp = models.DateTimeField(auto_now_add=False, default=datetime.now)
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
+
+
+# quantity
+class Quantity(models.Model):
+    ingredient = models.ForeignKey(
+        Ingredient, on_delete=models.SET_NULL, null=True, blank=True)
+    matkon = models.ForeignKey(
+        Matkon, on_delete=models.SET_NULL, null=True, blank=True)
+    quantity = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return 'Quantity:{} Ingredient:{} Matkon:{}'.format(str(self.quantity), str(self.ingredient), str(self.matkon))
